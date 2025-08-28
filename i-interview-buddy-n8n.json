@@ -1,0 +1,64 @@
+{
+  "name": "i-interview-buddy",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "i-interview-buddy",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "i-interview-buddy-01"
+    },
+    {
+      "parameters": {
+        "functionCode": "return [{ json: {\n  message: \"Hello! I’m your Interview Buddy 🤝. Ask me interview questions and I’ll guide you with answers.\" }}];"
+      },
+      "id": "2",
+      "name": "Interview Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "options": {},
+        "responseBody": "={{$json[\"message\"]}}",
+        "responseCode": 200
+      },
+      "id": "3",
+      "name": "Send Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [750, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Interview Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Interview Response": {
+      "main": [
+        [
+          {
+            "node": "Send Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
