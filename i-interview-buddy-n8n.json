@@ -1,0 +1,97 @@
+{
+  "name": "i-interview-buddy",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "i-interview-buddy",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "i-interview-buddy-01"
+    },
+    {
+      "parameters": {
+        "model": "gpt-3.5-turbo",
+        "messages": [
+          {
+            "role": "user",
+            "content": "={{$json[\"question\"]}}"
+          }
+        ]
+      },
+      "id": "2",
+      "name": "Message a Model (OpenAI)",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "mode": "keepKeyMatches",
+        "keepOnly": [],
+        "values": {
+          "string": [
+            {
+              "name": "answer",
+              "value": "Sure! Here’s a mock interview question: Tell me about yourself."
+            }
+          ]
+        }
+      },
+      "id": "3",
+      "name": "Edit Fields (Set)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {
+          "responseContentType": "application/json",
+          "responseBody": "{ \"response\": \"={{$json.answer}}\" }"
+        }
+      },
+      "id": "4",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Message a Model (OpenAI)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields (Set)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields (Set)": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
