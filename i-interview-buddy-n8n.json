@@ -16,25 +16,53 @@
     },
     {
       "parameters": {
-        "functionCode": "return [{ json: {\n  message: \"Hello! I’m your Interview Buddy 🤝. Ask me interview questions and I’ll guide you with answers.\" }}];"
+        "model": "gpt-3.5-turbo",
+        "messages": [
+          {
+            "role": "user",
+            "content": "={{$json[\"question\"]}}"
+          }
+        ]
       },
       "id": "2",
-      "name": "Interview Response",
-      "type": "n8n-nodes-base.function",
+      "name": "Message a Model (OpenAI)",
+      "type": "n8n-nodes-base.openAi",
       "typeVersion": 1,
-      "position": [500, 300]
+      "position": [450, 300]
     },
     {
       "parameters": {
-        "options": {},
-        "responseBody": "={{$json[\"message\"]}}",
-        "responseCode": 200
+        "mode": "keepKeyMatches",
+        "keepOnly": [],
+        "values": {
+          "string": [
+            {
+              "name": "answer",
+              "value": "Sure! Here’s a mock interview question: Tell me about yourself."
+            }
+          ]
+        }
       },
       "id": "3",
-      "name": "Send Response",
+      "name": "Edit Fields (Set)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {
+          "responseContentType": "application/json",
+          "responseBody": "{ \"response\": \"={{$json.answer}}\" }"
+        }
+      },
+      "id": "4",
+      "name": "Respond to Webhook",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [750, 300]
+      "position": [850, 300]
     }
   ],
   "connections": {
@@ -42,18 +70,23 @@
       "main": [
         [
           {
-            "node": "Interview Response",
+            "node": "Message a Model (OpenAI)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields (Set)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Interview Response": {
+    "Edit Fields (Set)": {
       "main": [
         [
           {
-            "node": "Send Response",
+            "node": "Respond to Webhook",
             "type": "main",
             "index": 0
           }
