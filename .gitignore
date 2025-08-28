@@ -1,0 +1,28 @@
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore personal files
+*.pdf
+*.docx
+*.xlsx
+*.pptx
+
+# Ignore binaries
+*.exe
+*.dll
+*.bin
+
+# Ignore archives
+
+*.zip
+*.tar
+*.gz
+*.rar
+
+# Ignore logs
+*.log
+
+# Ignore temporary files
+*.tmp
+*.swp
